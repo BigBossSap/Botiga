@@ -36,6 +36,14 @@ namespace Botiga
                         break;
 
                     case "3":
+
+                        
+                        ModificarProducte(productes,  nElementsBotiga);
+
+
+                        break;
+
+                    case "4":
                         MostrarTaules(productes, preus, nElementsBotiga);
 
 
@@ -66,7 +74,11 @@ namespace Botiga
                 prod[nElements] = producte;
                 preu[nElements] = preuProd;
                 nElements++;
-           
+
+            Console.WriteLine("Vols afegir mes productes s/n");
+            string opt = Console.ReadLine();
+            if (opt == "s")
+                AfegirProducte(prod, preu, ref nElements);
 
 
 
@@ -77,13 +89,28 @@ namespace Botiga
             Console.WriteLine("Producte a buscar: ");
             string producteBuscar = Console.ReadLine();
             Console.WriteLine("Nou preu: ");
-            int nouPreu = Convert.ToInt32(Console.ReadLine());
+            double nouPreu = Convert.ToDouble(Console.ReadLine());
             int pos = posValorBuscar(prod, nElements, producteBuscar);
             preu[pos] = nouPreu;
 
         }
 
+        static void ModificarProducte(string[]prod, int eElements)
+        {
+            Console.WriteLine("Producte a modificar: ");
+            string producteMod = Console.ReadLine();
+            for(int i=0; i<eElements;i++)
+            {
+                if (producteMod == prod[i])
+                {
+                    Console.WriteLine("Nom nou: ");
+                    prod[i] = Console.ReadLine();
 
+                }
+            }
+
+
+        }
         static int posValorBuscar(string[] prod, int nElements, string buscar)
         {
 
@@ -117,6 +144,8 @@ namespace Botiga
             }
 
             Console.WriteLine(taulaProd);
+            Console.WriteLine();
+            Console.WriteLine($"Tenim un total de {nElements} productes a la botiga");
 
             
 
