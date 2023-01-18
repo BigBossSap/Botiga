@@ -69,7 +69,10 @@ namespace Botiga
                        preus= SortArray(preus, 0, preus.Length-1);
 
                         break;
+                    case "7":
 
+
+                        break;
                 }
 
                 num = Menu();
