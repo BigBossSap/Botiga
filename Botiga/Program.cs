@@ -7,9 +7,12 @@ namespace Botiga
         static void Main(string[] args)
         {
             int nElementsBotiga = 0;
-            
-            string[] productes = new string[40];
-            double[] preus = new double[40];
+            int nelementsCistella = 0;
+            string[] productesCistella = new string[100];
+            int [] quantitat = new int[100];
+
+            string[] productes = new string[2];
+            double[] preus = new double[2];
 
             string num = Menu();
             Console.Clear();
@@ -22,9 +25,18 @@ namespace Botiga
                 switch (num)
                 {
                     case "1":
-
-                        AfegirProducte(productes, preus, ref nElementsBotiga);
                         
+                        
+                        string opt = "s";
+                        while (opt == "s")
+                        {
+                            
+                            if (nElementsBotiga >= productes.Length)
+                                AmpliarBotiga(ref productes, ref preus);
+                            AfegirProducte(productes, preus, ref nElementsBotiga);
+                            Console.WriteLine("Vols afegir mes productes s/n");
+                            opt = Console.ReadLine();
+                        }
                         break;
 
 
@@ -49,6 +61,15 @@ namespace Botiga
 
                         break;
 
+                    case "5":
+                        AmpliarBotiga(ref productes, ref preus);
+                        break;
+
+                    case "6":
+                       preus= SortArray(preus, 0, preus.Length-1);
+
+                        break;
+
                 }
 
                 num = Menu();
@@ -59,26 +80,50 @@ namespace Botiga
         }
 
 
-        static void AfegirProducte(string[]prod, double[]preu, ref int nElements)
+        static void AfegirProducte(string[]productes, double[]preus, ref int nElementsBotiga)
         {
-          
 
+
+        
             
-            
+
                 Console.WriteLine("Nom del producte: ");
                 string producte = Console.ReadLine();
 
                 Console.WriteLine("Preu: 00,00 €");
                 double preuProd = Convert.ToDouble(Console.ReadLine());
 
-                prod[nElements] = producte;
-                preu[nElements] = preuProd;
-                nElements++;
+                productes[nElementsBotiga] = producte;
+                preus[nElementsBotiga] = preuProd;
+                nElementsBotiga++;
 
-            Console.WriteLine("Vols afegir mes productes s/n");
-            string opt = Console.ReadLine();
-            if (opt == "s")
-                AfegirProducte(prod, preu, ref nElements);
+           
+
+
+
+
+
+
+        }
+
+        static void AmpliarBotiga(ref string[]prod, ref double[]preu)
+        {
+
+            Console.WriteLine("No hi ha prou espai a la botiga: ");
+            Console.WriteLine("Capacitat a ampliar: ");
+            int ampliar = Convert.ToInt32(Console.ReadLine());
+            string[] copiaProd = new string[prod.Length+ampliar];
+            for (int i=0; i<prod.Length;i++)
+            {
+                copiaProd[i] = prod[i];
+            }
+            prod = copiaProd;
+            double[] copiaPreu = new double[preu.Length + ampliar];
+            for (int j = 0; j < preu.Length; j++)
+            {
+                copiaPreu[j] = preu[j];
+            }
+            preu = copiaPreu;
 
 
 
@@ -152,8 +197,60 @@ namespace Botiga
           
         }
 
+        static void MostrarTaules(string[] prod, double[] preus)
+        {
+            string taulaProd = "";
 
-    
+
+            for (int i = 0; i < prod.Length; i++)
+            {
+                taulaProd += $"En l'index {i} trobem el producte <{prod[i]}> a un preu de {Convert.ToString(preus[i])} euros\n\n";
+
+            }
+
+            Console.WriteLine(taulaProd);
+            Console.WriteLine();
+            
+
+
+
+
+        }
+
+        static double[] SortArray(double[] array, int leftIndex, int rightIndex)
+        {
+            var i = leftIndex;
+            var j = rightIndex;
+            var pivot = array[leftIndex];
+            while (i <= j)
+            {
+                while (array[i] < pivot)
+                {
+                    i++;
+                }
+
+                while (array[j] > pivot)
+                {
+                    j--;
+                }
+                if (i <= j)
+                {
+                    double temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                    i++;
+                    j--;
+                }
+            }
+
+            if (leftIndex < j)
+                SortArray(array, leftIndex, j);
+            if (i < rightIndex)
+                SortArray(array, i, rightIndex);
+            return array;
+        }
+
+
 
 
         static string Menu()
@@ -161,8 +258,11 @@ namespace Botiga
 
 
             string[] menu = {
-                "1. Afegir prod.\n",
-            "2.Modificar prod\n"};
+            "1. Afegir prod.\n",
+            "2. Modificar preu prod\n",
+            "3. Modificar producte\n",
+            "4. Mostrar taules\n",
+            "5. Ampliar capacitat de la botiga\n"};
                 
 
 
