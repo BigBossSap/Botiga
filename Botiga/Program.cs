@@ -15,7 +15,7 @@ namespace Botiga
             int nElementsBotiga = 0;
             int nelementsCistella = 0;
             string[] productesCistella = new string[100];
-            double [] quantitat = new double[100];
+            double[] quantitat = new double[100];
             double[] preusCistella = new double[100];
             string[] productes = new string[2];
             double[] preus = new double[2];
@@ -157,7 +157,7 @@ namespace Botiga
         {
 
             int cont = 0;
-            int pos = 0;
+            int pos = -1;
 
             for (int i = 0; i < nElements; i++)
             {
@@ -279,10 +279,20 @@ namespace Botiga
         {
             int pos = posValorBuscar(productesBotiga, nElements, producteComprat);
 
-            productesCistella[pos] = producteComprat;
-            quantitatCistella[pos] = quantitat;
-            preusCistella[pos] = preus[pos];
-            nElementsCistella++;
+            if (pos != -1)
+            {
+                productesCistella[pos] = producteComprat;
+                quantitatCistella[pos] = quantitat;
+                preusCistella[pos] = preus[pos];
+                nElementsCistella++;
+            }
+            
+            else
+            {
+                Console.WriteLine("Error");
+            }
+
+        
             
             
 
