@@ -6,11 +6,9 @@ namespace Botiga
     {
         static void Main(string[] args)
         {
-
             Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.WindowHeight = 37;
             Console.WindowWidth = 85;
-            
             double diners = 1000;
             int nElementsBotiga = 0;
             int nelementsCistella = 0;
@@ -19,67 +17,43 @@ namespace Botiga
             double[] preusCistella = new double[100];
             string[] productes = new string[2];
             double[] preus = new double[2];
-
             string num = Menu();
             Console.Clear();
-
             while (num != "20")
             {
-
-
-
                 switch (num)
                 {
                     case "1":
-                        
-                        
                         string opt = "s";
                         while (opt == "s")
                         {
-                            
                             if (nElementsBotiga >= productes.Length)
                                 AmpliarBotiga(ref productes, ref preus);
                             Console.WriteLine();
                             Console.Write("Nom del producte: ");
                             string producte = Console.ReadLine();
-
-                            Console.Write("Preu(00,00€): ");
+                            Console.Write("Preu(00,00€): ");                          
                             double preuProd = Convert.ToDouble(Console.ReadLine());
+                            if ()
                             AfegirProducte(productes, preus, ref nElementsBotiga, producte, preuProd);
                             Console.WriteLine(Format("Vols afegir mes productes s/n"));
                             opt = Console.ReadLine();
                         }
                         break;
-
-
-
                     case "2":
                         ModificarPreu(productes, preus, ref nElementsBotiga);
-
-
                         break;
-
                     case "3":
-
-                        
                         ModificarProducte(productes,  nElementsBotiga);
-
-
                         break;
-
                     case "4":
                         MostrarTaulesBotiga(productes, preus, nElementsBotiga);
-
-
                         break;
-
                     case "5":
                         AmpliarBotiga(ref productes, ref preus);
                         break;
-
                     case "6":
                        preus= SortArray(preus, 0, preus.Length-1);
-
                         break;
                     case "7":
                         Console.WriteLine("Producte a comprar: ");
@@ -87,27 +61,24 @@ namespace Botiga
                         Console.WriteLine("Quantitat: ");
                         int quantitatComprar = Convert.ToInt32(Console.ReadLine());
                         AfegirCistella(preus, preusCistella, productes, productesCistella,quantitat, producteComprar, nElementsBotiga, ref nelementsCistella, quantitatComprar);
+                        ContadorRetorn();
                         break;
                     case "8":
                         MostrarTaulesCistella(productesCistella, quantitat,preusCistella, nelementsCistella);
+                        ContadorRetorn();
                         break;
                 }
-
                 num = Menu();
                 Console.Clear();
             }
-
-
         }
-
-
         static void AfegirProducte(string[]productes, double[]preus, ref int nElementsBotiga, string producte, double preuProducte)
         {                    
                 productes[nElementsBotiga] = producte;
                 preus[nElementsBotiga] = preuProducte;
-                nElementsBotiga++;        
+                nElementsBotiga++;
+            
         }
-
         static void AmpliarBotiga(ref string[]prod, ref double[]preu)
         {
             Console.WriteLine("No hi ha prou espai a la botiga: ");
@@ -134,9 +105,7 @@ namespace Botiga
             double nouPreu = Convert.ToDouble(Console.ReadLine());
             int pos = posValorBuscar(prod, nElements, producteBuscar);
             preu[pos] = nouPreu;
-
         }
-
         static void ModificarProducte(string[]prod, int nElements)
         {
             Console.WriteLine("Producte a modificar: ");
@@ -147,96 +116,56 @@ namespace Botiga
                 {
                     Console.WriteLine("Nom nou: ");
                     prod[i] = Console.ReadLine();
-
                 }
             }
-
-
         }
         static int posValorBuscar(string[] prod, int nElements, string buscar)
         {
-
             int cont = 0;
             int pos = -1;
-
             for (int i = 0; i < nElements; i++)
             {
-
                 if (buscar == prod[i])
                     pos = cont;
-
                 cont++;
             }
-
             return pos;
-
-
-
-
         }
         static void MostrarTaulesBotiga (string[] prod, double[] preus, int nElements)
         {
             string taulaProd = "";
-           
-
             for (int i = 0; i < nElements; i++)
             {
                 taulaProd += $"En l'index {i} trobem el producte <{prod[i]}> a un preu de {Convert.ToString(preus[i])} euros\n\n";
-
             }
-
             Console.WriteLine(taulaProd);
             Console.WriteLine();
             Console.WriteLine($"Tenim un total de {nElements} productes a la botiga");
-
-            
-
-          
         }
-
         static void MostrarTaules(string[] prod, double[] preus)
         {
             string taulaProd = "";
-
-
             for (int i = 0; i < prod.Length; i++)
             {
                 taulaProd += $"En l'index {i} trobem el producte <{prod[i]}> a un preu de {Convert.ToString(preus[i])} euros\n\n";
-
             }
-
             Console.WriteLine(taulaProd);
-            Console.WriteLine();
-            
-
-
-
-
+            Console.WriteLine();          
         }
-
         static void MostrarTaulesCistella(string[] prod, double[] quantitat, double[]preusCistella, double nElementsBotiga)
         {
             string taulaProd = "";
             double total = 0;
-
             for (int i = 0; i < nElementsBotiga; i++)
             {
-                taulaProd += $"<{prod[i]}> preu unitari: {preusCistella[i]}€ x {quantitat[i]} = {calcularTotal(quantitat,preusCistella,i)}€ \n\n";
+                Console.WriteLine();
+                taulaProd += Format($"<{prod[i]}> preu unitari: {preusCistella[i]}€ x {quantitat[i]} = {calcularTotal(quantitat,preusCistella,i)}€ \n\n");
                 total += calcularTotal(quantitat, preusCistella, i);
-            }
-
-            
-
+            }        
             Console.WriteLine(taulaProd);
             Console.WriteLine();
-            Console.WriteLine($"Total: {Math.Round(total,2)}€ ");
-
-
-
-
-
+            Console.WriteLine(Format($"Total: {Math.Round(total,2)}€ "));
         }
-
         static double calcularTotal(double[] quantitat, double[] preuscistella, int i)
         {
             double total = quantitat[i] * preuscistella[i];
@@ -253,7 +182,6 @@ namespace Botiga
                 {
                     i++;
                 }
-
                 while (array[j] > pivot)
                 {
                     j--;
@@ -267,40 +195,29 @@ namespace Botiga
                     j--;
                 }
             }
-
             if (leftIndex < j)
                 SortArray(array, leftIndex, j);
             if (i < rightIndex)
                 SortArray(array, i, rightIndex);
             return array;
         }
-
         static void AfegirCistella(double[]preus, double[]preusCistella, string[]productesBotiga, string[] productesCistella, double[] quantitatCistella, string producteComprat, int nElements, ref int nElementsCistella, int quantitat)
         {
             int pos = posValorBuscar(productesBotiga, nElements, producteComprat);
-
             if (pos != -1)
             {
                 productesCistella[pos] = producteComprat;
                 quantitatCistella[pos] = quantitat;
                 preusCistella[pos] = preus[pos];
                 nElementsCistella++;
-            }
-            
+            }           
             else
             {
                 Console.WriteLine("Error");
-            }
-
-        
-            
-            
-
+            }                          
         }
         static string Menu()
         {
-
-
             string[] menu = {
             "1. Afegir prod.\n",
             "2. Modificar preu prod\n",
@@ -313,17 +230,9 @@ namespace Botiga
             " \n",
             "7. Afegir productes a la cistella.\n",
             "8. Mostrar cistella i total\n",
-              
-            };
-                
-
-
+            };               
             Console.WriteLine(new String('*', Console.WindowWidth));
-
-            Console.WriteLine();
-            
-                                                                    
-
+            Console.WriteLine();                                                                            
             Console.WriteLine(@"
         ██╗      █████╗     ████████╗██╗███████╗███╗   ██╗██████╗  █████╗ 
         ██║     ██╔══██╗    ╚══██╔══╝██║██╔════╝████╗  ██║██╔══██╗██╔══██╗
@@ -331,51 +240,31 @@ namespace Botiga
         ██║     ██╔══██║       ██║   ██║██╔══╝  ██║╚██╗██║██║  ██║██╔══██║
         ███████╗██║  ██║       ██║   ██║███████╗██║ ╚████║██████╔╝██║  ██║
         ╚══════╝╚═╝  ╚═╝       ╚═╝   ╚═╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝
-                                                                  
 ");
-
-
-
             foreach (string opcio in menu)
             {
-
-
                 Console.ForegroundColor = ConsoleColor.DarkGreen;
-
                 Console.WriteLine(FormatMenu(opcio));
-
                 Console.ResetColor();
             }
-
-
-
             Console.WriteLine();
             Console.WriteLine(new String('*', Console.WindowWidth));
-
             Console.Write(FormatMenu("Selecciona una opció: "));
-
             string num = Console.ReadLine();
-
-
-
             return num;
         }
         static void ContadorRetorn()
         {
-
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine(Format("Presiona qualsevol tecla per continuar..."));
             Console.ReadKey();
-
             for (int i = 3; i >= 1; i--)
             {
                 Console.Clear();
                 Console.WriteLine();
                 Console.WriteLine(Format($"Tornant al menu en {i} segons..."));
-               
-
             }
             Console.Clear();
         }
@@ -386,11 +275,8 @@ namespace Botiga
         }
         static string Format(string text)
         {
-
             text = new string(' ', ((Console.WindowWidth - (text.Length)) / 2)) + text;
             return text;
         }
-
-
     }
 }
