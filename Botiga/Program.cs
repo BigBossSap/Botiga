@@ -1,5 +1,7 @@
 ﻿using System;
-using System.Threading; 
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Linq;
 namespace Botiga
 {
     class Program
@@ -30,12 +32,20 @@ namespace Botiga
                             if (nElementsBotiga >= productes.Length)
                                 AmpliarBotiga(ref productes, ref preus);
                             Console.WriteLine();
+                            
                             Console.Write("Nom del producte: ");
-                            string producte = Console.ReadLine();
+                            string producte = Console.ReadLine();                            
                             Console.Write("Preu(00,00€): ");                          
-                            double preuProd = Convert.ToDouble(Console.ReadLine());
-                            if ()
-                            AfegirProducte(productes, preus, ref nElementsBotiga, producte, preuProd);
+                            string preuProd = (Console.ReadLine());
+                            //while ((preuProd<0||preuProd>double.MaxValue) && ValidadorNum(preuProd){ }                          
+                            while (!preuProd.All(char.IsDigit) || (double.Parse(preuProd) < 0))
+                            {
+                                Console.WriteLine("Preu Invalid. Torna a intentar: ");
+                                Console.Write("Preu(00,00€): ");
+                                preuProd = (Console.ReadLine());
+                            }
+                            double preuProdBo=Convert.ToDouble(preuProd);
+                            AfegirProducte(productes, preus, ref nElementsBotiga, producte, preuProdBo);
                             Console.WriteLine(Format("Vols afegir mes productes s/n"));
                             opt = Console.ReadLine();
                         }
@@ -59,8 +69,15 @@ namespace Botiga
                         Console.WriteLine("Producte a comprar: ");
                         string producteComprar = Console.ReadLine();
                         Console.WriteLine("Quantitat: ");
-                        int quantitatComprar = Convert.ToInt32(Console.ReadLine());
-                        AfegirCistella(preus, preusCistella, productes, productesCistella,quantitat, producteComprar, nElementsBotiga, ref nelementsCistella, quantitatComprar);
+                        string quantitatComprar = Console.ReadLine();
+                        while (!quantitatComprar.All(char.IsDigit) || (int.Parse(quantitatComprar) < 0))
+                        {
+                            Console.WriteLine("Quantitat incorrecta, torna a intentar: ");
+                            Console.Write("Quantitat: ");
+                            quantitatComprar = Console.ReadLine();
+                        }
+                        int quantitatComprarBo = int.Parse(quantitatComprar);
+                        AfegirCistella(preus, preusCistella, productes, productesCistella,quantitat, producteComprar, nElementsBotiga, ref nelementsCistella, quantitatComprarBo);
                         ContadorRetorn();
                         break;
                     case "8":
@@ -102,9 +119,16 @@ namespace Botiga
             Console.WriteLine("Producte a buscar: ");
             string producteBuscar = Console.ReadLine();
             Console.WriteLine("Nou preu: ");
-            double nouPreu = Convert.ToDouble(Console.ReadLine());
+            string nouPreu = Console.ReadLine();
+            while (!nouPreu.All(char.IsDigit) || (double.Parse(nouPreu) < 0))
+            {
+                Console.WriteLine("Preu Invalid. Torna a intentar: ");
+                Console.Write("Nou preu: ");
+                nouPreu = (Console.ReadLine());
+            }
+            double nouPreuValid = int.Parse(nouPreu);
             int pos = posValorBuscar(prod, nElements, producteBuscar);
-            preu[pos] = nouPreu;
+            preu[pos] = nouPreuValid;
         }
         static void ModificarProducte(string[]prod, int nElements)
         {
@@ -277,6 +301,12 @@ namespace Botiga
         {
             text = new string(' ', ((Console.WindowWidth - (text.Length)) / 2)) + text;
             return text;
+        }
+
+        static bool ValidadorNum(string num)
+        {
+            int esnum;
+            return Int32.TryParse(num, out esnum);
         }
     }
 }
