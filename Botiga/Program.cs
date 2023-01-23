@@ -2,13 +2,17 @@
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Linq;
+
 namespace Botiga
 {
     class Program
     {
         static void Main(string[] args)
         {
+            
             Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.BackgroundColor = ConsoleColor.DarkBlue;  
+            
             Console.WindowHeight = 37;
             Console.WindowWidth = 85;
             double diners = 1000;
@@ -32,32 +36,37 @@ namespace Botiga
                             if (nElementsBotiga >= productes.Length)
                                 AmpliarBotiga(ref productes, ref preus);
                             Console.WriteLine();
-                            
-                            Console.Write("Nom del producte: ");
-                            string producte = Console.ReadLine();                            
-                            Console.Write("Preu(00,00€): ");                          
+                            Console.WriteLine();
+                            Console.Write(FormatMenu("Nom del producte: "));
+                            string producte = Console.ReadLine();
+                            Console.WriteLine();
+                            Console.Write(FormatMenu("Preu(00,00€): "));                          
                             string preuProd = (Console.ReadLine());
                             //while ((preuProd<0||preuProd>double.MaxValue) && ValidadorNum(preuProd){ }                          
                             while (!preuProd.All(char.IsDigit) || (double.Parse(preuProd) < 0))
                             {
-                                Console.WriteLine("Preu Invalid. Torna a intentar: ");
-                                Console.Write("Preu(00,00€): ");
+                                Console.WriteLine(FormatMenu("Preu Invalid. Torna a intentar: "));
+                                Console.Write(FormatMenu("Preu(00,00€): "));
                                 preuProd = (Console.ReadLine());
                             }
                             double preuProdBo=Convert.ToDouble(preuProd);
                             AfegirProducte(productes, preus, ref nElementsBotiga, producte, preuProdBo);
-                            Console.WriteLine(Format("Vols afegir mes productes s/n"));
+                            Console.WriteLine();
+                            Console.Write(FormatMenu("Vols afegir mes productes s/n"));
                             opt = Console.ReadLine();
                         }
                         break;
                     case "2":
                         ModificarPreu(productes, preus, ref nElementsBotiga);
+                        ContadorRetorn();
                         break;
                     case "3":
                         ModificarProducte(productes,  nElementsBotiga);
+                        ContadorRetorn();
                         break;
                     case "4":
                         MostrarTaulesBotiga(productes, preus, nElementsBotiga);
+                        ContadorRetorn();
                         break;
                     case "5":
                         AmpliarBotiga(ref productes, ref preus);
@@ -66,6 +75,7 @@ namespace Botiga
                        preus= SortArray(preus, 0, preus.Length-1);
                         break;
                     case "7":
+                        MostrarTaulesCompra(productes, preus, nElementsBotiga);
                         Console.WriteLine("Producte a comprar: ");
                         string producteComprar = Console.ReadLine();
                         Console.WriteLine("Quantitat: ");
@@ -77,11 +87,11 @@ namespace Botiga
                             quantitatComprar = Console.ReadLine();
                         }
                         int quantitatComprarBo = int.Parse(quantitatComprar);
-                        AfegirCistella(preus, preusCistella, productes, productesCistella,quantitat, producteComprar, nElementsBotiga, ref nelementsCistella, quantitatComprarBo);
+                        AfegirCistella(preus, preusCistella, productes, productesCistella,quantitat, producteComprar, nElementsBotiga, ref nelementsCistella, quantitatComprarBo, diners);
                         ContadorRetorn();
                         break;
                     case "8":
-                        MostrarTaulesCistella(productesCistella, quantitat,preusCistella, nelementsCistella);
+                        MostrarTaulesCistella(productesCistella, quantitat,preusCistella, nelementsCistella, ref diners);
                         ContadorRetorn();
                         break;
                 }
@@ -100,14 +110,22 @@ namespace Botiga
         {
             Console.WriteLine("No hi ha prou espai a la botiga: ");
             Console.WriteLine("Capacitat a ampliar: ");
-            int ampliar = Convert.ToInt32(Console.ReadLine());
-            string[] copiaProd = new string[prod.Length+ampliar];
+            string ampliar = Console.ReadLine();
+            while (!ampliar.All(char.IsDigit) || (int.Parse(ampliar) < 0))
+            {
+                Console.WriteLine("Num Invalid. Torna a intentar: ");
+                Console.Write("Capacitat a ampliar: ");
+                ampliar = (Console.ReadLine());
+            }
+            int ampliarValid = Convert.ToInt32(ampliar);
+
+            string[] copiaProd = new string[prod.Length+ampliarValid];
             for (int i=0; i<prod.Length;i++)
             {
                 copiaProd[i] = prod[i];
             }
             prod = copiaProd;
-            double[] copiaPreu = new double[preu.Length + ampliar];
+            double[] copiaPreu = new double[preu.Length + ampliarValid];
             for (int j = 0; j < preu.Length; j++)
             {
                 copiaPreu[j] = preu[j];
@@ -116,31 +134,58 @@ namespace Botiga
         }
         static void ModificarPreu(string[]prod, double[]preu, ref int nElements)
         {
-            Console.WriteLine("Producte a buscar: ");
-            string producteBuscar = Console.ReadLine();
-            Console.WriteLine("Nou preu: ");
-            string nouPreu = Console.ReadLine();
-            while (!nouPreu.All(char.IsDigit) || (double.Parse(nouPreu) < 0))
+
+            if (nElements == 0)
             {
-                Console.WriteLine("Preu Invalid. Torna a intentar: ");
-                Console.Write("Nou preu: ");
-                nouPreu = (Console.ReadLine());
+                Console.WriteLine();
+                Console.WriteLine(FormatMenu("No hi ha productes a la botiga"));
+                
             }
-            double nouPreuValid = int.Parse(nouPreu);
-            int pos = posValorBuscar(prod, nElements, producteBuscar);
-            preu[pos] = nouPreuValid;
+            else
+            {
+                MostrarTaulesCompra(prod, preu, nElements);
+                Console.WriteLine();
+                Console.Write(FormatMenu("Producte a modificar: "));
+                string producteBuscar = Console.ReadLine();
+                Console.WriteLine();
+                Console.Write(FormatMenu("Nou preu: "));
+                string nouPreu = Console.ReadLine();
+                while (!nouPreu.All(char.IsDigit) || (double.Parse(nouPreu) < 0))
+                {
+                    Console.WriteLine(FormatMenu("Preu Invalid. Torna a intentar: "));
+                    Console.Write(FormatMenu("Nou preu: "));
+                    nouPreu = (Console.ReadLine());
+                }
+                double nouPreuValid = int.Parse(nouPreu);
+                int pos = posValorBuscar(prod, nElements, producteBuscar);
+                preu[pos] = nouPreuValid;
+            }
         }
         static void ModificarProducte(string[]prod, int nElements)
         {
-            Console.WriteLine("Producte a modificar: ");
-            string producteMod = Console.ReadLine();
-            for(int i=0; i<nElements;i++)
+
+            if (nElements == 0)
             {
-                if (producteMod == prod[i])
+                Console.WriteLine();
+                Console.WriteLine(FormatMenu("No hi ha productes a la botiga"));
+                ContadorRetorn();
+            }
+            else
+            {
+                MostrarTaulesCompra(prod, nElements);
+                Console.WriteLine();
+
+                Console.WriteLine(FormatMenu("Producte a modificar: "));
+                string producteMod = Console.ReadLine();
+                for (int i = 0; i < nElements; i++)
                 {
-                    Console.WriteLine("Nom nou: ");
-                    prod[i] = Console.ReadLine();
+                    if (producteMod == prod[i])
+                    {
+                        Console.WriteLine(FormatMenu("Nom nou: "));
+                        prod[i] = Console.ReadLine();
+                    }
                 }
+
             }
         }
         static int posValorBuscar(string[] prod, int nElements, string buscar)
@@ -160,39 +205,64 @@ namespace Botiga
             string taulaProd = "";
             for (int i = 0; i < nElements; i++)
             {
-                taulaProd += $"En l'index {i} trobem el producte <{prod[i]}> a un preu de {Convert.ToString(preus[i])} euros\n\n";
+                taulaProd += FormatMenu($"En l'index {i} trobem el producte <{prod[i]}> a un preu de {Convert.ToString(preus[i])} euros\n\n");
+            }
+            Console.WriteLine();
+            Console.WriteLine(taulaProd);
+            Console.WriteLine();
+            Console.WriteLine(FormatMenu($"Tenim un total de {nElements} productes a la botiga"));
+        }
+        static void MostrarTaulesCompra(string[] prod, double[] preus, int nElements)
+        {
+            string taulaProd = "";
+            for (int i = 0; i < nElements; i++)
+            {
+                taulaProd += $"<{prod[i]}> a un preu de {Convert.ToString(preus[i])}€\n\n";
             }
             Console.WriteLine(taulaProd);
             Console.WriteLine();
             Console.WriteLine($"Tenim un total de {nElements} productes a la botiga");
+        }
+
+        static void MostrarTaulesCompra(string[] prod, int nElements)
+        {
+            string taulaProd = "";
+            for (int i = 0; i < nElements; i++)
+            {
+                taulaProd += FormatMenu($"{i} <{prod[i]}>\n");
+            }
+            Console.WriteLine(taulaProd);
+            Console.WriteLine();
+            Console.WriteLine(FormatMenu($"Tenim un total de {nElements} productes a la botiga"));
         }
         static void MostrarTaules(string[] prod, double[] preus)
         {
             string taulaProd = "";
             for (int i = 0; i < prod.Length; i++)
             {
-                taulaProd += $"En l'index {i} trobem el producte <{prod[i]}> a un preu de {Convert.ToString(preus[i])} euros\n\n";
+                taulaProd += $"<{prod[i]}> a un preu de {Convert.ToString(preus[i])} euros\n\n";
             }
             Console.WriteLine(taulaProd);
             Console.WriteLine();          
         }
-        static void MostrarTaulesCistella(string[] prod, double[] quantitat, double[]preusCistella, double nElementsBotiga)
+        static void MostrarTaulesCistella(string[] prod, double[] quantitat, double[]preusCistella, double nElementsBotiga, ref double diners)
         {
             string taulaProd = "";
             double total = 0;
             for (int i = 0; i < nElementsBotiga; i++)
             {
                 Console.WriteLine();
-                taulaProd += Format($"<{prod[i]}> preu unitari: {preusCistella[i]}€ x {quantitat[i]} = {calcularTotal(quantitat,preusCistella,i)}€ \n\n");
-                total += calcularTotal(quantitat, preusCistella, i);
+                taulaProd += FormatMenu($"<{prod[i]}> preu unitari: {preusCistella[i]}€ x {quantitat[i]} = {calcularTotal(quantitat,preusCistella,i, ref diners)}€ \n\n");
+                total += calcularTotal(quantitat, preusCistella, i, ref diners);
             }        
             Console.WriteLine(taulaProd);
             Console.WriteLine();
-            Console.WriteLine(Format($"Total: {Math.Round(total,2)}€ "));
+            Console.WriteLine(FormatMenu($"Total: {Math.Round(total,2)}€ "));
         }
-        static double calcularTotal(double[] quantitat, double[] preuscistella, int i)
+        static double calcularTotal(double[] quantitat, double[] preuscistella, int i, ref double diners)
         {
             double total = quantitat[i] * preuscistella[i];
+            diners -= total;
             return total;
         }
         static double[] SortArray(double[] array, int leftIndex, int rightIndex)
@@ -225,23 +295,30 @@ namespace Botiga
                 SortArray(array, i, rightIndex);
             return array;
         }
-        static void AfegirCistella(double[]preus, double[]preusCistella, string[]productesBotiga, string[] productesCistella, double[] quantitatCistella, string producteComprat, int nElements, ref int nElementsCistella, int quantitat)
+        static void AfegirCistella(double[]preus, double[]preusCistella, string[]productesBotiga, string[] productesCistella, double[] quantitatCistella, string producteComprat, int nElements, ref int nElementsCistella, int quantitat, double diners)
         {
-            int pos = posValorBuscar(productesBotiga, nElements, producteComprat);
-            if (pos != -1)
+            if (diners > 0)
             {
-                productesCistella[pos] = producteComprat;
-                quantitatCistella[pos] = quantitat;
-                preusCistella[pos] = preus[pos];
-                nElementsCistella++;
-            }           
+                int pos = posValorBuscar(productesBotiga, nElements, producteComprat);
+                if (pos != -1)
+                {
+                    productesCistella[pos] = producteComprat;
+                    quantitatCistella[pos] = quantitat;
+                    preusCistella[pos] = preus[pos];
+                    nElementsCistella++;
+                }
+                else
+                {
+                    Console.WriteLine("Error");
+                }
+            }
+
             else
-            {
-                Console.WriteLine("Error");
-            }                          
+                Console.WriteLine("no Funds");
         }
         static string Menu()
         {
+            Console.Clear();
             string[] menu = {
             "1. Afegir prod.\n",
             "2. Modificar preu prod\n",
@@ -267,9 +344,9 @@ namespace Botiga
 ");
             foreach (string opcio in menu)
             {
-                Console.ForegroundColor = ConsoleColor.DarkGreen;
+                Console.ForegroundColor = ConsoleColor.White;
                 Console.WriteLine(FormatMenu(opcio));
-                Console.ResetColor();
+                
             }
             Console.WriteLine();
             Console.WriteLine(new String('*', Console.WindowWidth));
@@ -282,13 +359,13 @@ namespace Botiga
             Console.WriteLine();
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine(Format("Presiona qualsevol tecla per continuar..."));
+            Console.WriteLine(FormatMenu("Presiona qualsevol tecla per continuar..."));
             Console.ReadKey();
             for (int i = 3; i >= 1; i--)
             {
                 Console.Clear();
                 Console.WriteLine();
-                Console.WriteLine(Format($"Tornant al menu en {i} segons..."));
+                Console.WriteLine(FormatMenu($"Tornant al menu en {i} segons..."));
             }
             Console.Clear();
         }
@@ -299,7 +376,7 @@ namespace Botiga
         }
         static string Format(string text)
         {
-            text = new string(' ', ((Console.WindowWidth - (text.Length)) / 2)) + text;
+            text = new string(' ', ((Console.WindowWidth - (text.Length)) / 2))+ text;
             return text;
         }
 
