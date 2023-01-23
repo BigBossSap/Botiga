@@ -331,30 +331,31 @@ namespace Botiga
         {
             Console.Clear();
             string[] menu = {
-            "1. Afegir prod.\n",
-            "2. Modificar preu prod\n",
-            "3. Modificar producte\n",
-            "4. Mostrar taules\n",
-            "5. Ampliar capacitat de la botiga\n",
-            "6. Quicksort\n",
+            ">1. Afegir producte\n",
+            ">2. Modificar el preu  d'un producte\n",
+            ">3. Modificar un producte\n",
+            ">4. Mostrar taules\n",
+            ">5. Ampliar capacitat de la botiga\n",
+            ">6. Quicksort\n",
             " \n",
             " CISTELLA",
             " \n",
-            "7. Afegir productes a la cistella.\n",
-            "8. Mostrar cistella i total\n",
+            ">7. Afegir productes a la cistella.\n",
+            ">8. Mostrar cistella i total\n",
             " \n",          
-            "9. SORTIR",
+            ">9. SORTIR",
 
             };               
             Console.WriteLine(new String('*', Console.WindowWidth));
             Console.WriteLine();                                                                            
             Console.WriteLine(@"
-        ██╗      █████╗     ████████╗██╗███████╗███╗   ██╗██████╗  █████╗ 
-        ██║     ██╔══██╗    ╚══██╔══╝██║██╔════╝████╗  ██║██╔══██╗██╔══██╗
-        ██║     ███████║       ██║   ██║█████╗  ██╔██╗ ██║██║  ██║███████║  
-        ██║     ██╔══██║       ██║   ██║██╔══╝  ██║╚██╗██║██║  ██║██╔══██║
-        ███████╗██║  ██║       ██║   ██║███████╗██║ ╚████║██████╔╝██║  ██║
-        ╚══════╝╚═╝  ╚═╝       ╚═╝   ╚═╝╚══════╝╚═╝  ╚═══╝╚═════╝ ╚═╝  ╚═╝
+                ██████╗  ██████╗ ████████╗██╗ ██████╗  █████╗ 
+                ██╔══██╗██╔═══██╗╚══██╔══╝██║██╔════╝ ██╔══██╗
+                ██████╔╝██║   ██║   ██║   ██║██║  ███╗███████║
+                ██╔══██╗██║   ██║   ██║   ██║██║   ██║██╔══██║
+                ██████╔╝╚██████╔╝   ██║   ██║╚██████╔╝██║  ██║
+                ╚═════╝  ╚═════╝    ╚═╝   ╚═╝ ╚═════╝ ╚═╝  ╚═╝
+                                              
 ");
             foreach (string opcio in menu)
             {
