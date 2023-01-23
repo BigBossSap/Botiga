@@ -25,7 +25,7 @@ namespace Botiga
             double[] preus = new double[2];
             string num = Menu();
             Console.Clear();
-            while (num != "20")
+            while (num != "9")
             {
                 switch (num)
                 {
@@ -78,6 +78,13 @@ namespace Botiga
                         MostrarTaulesCompra(productes, preus, nElementsBotiga);
                         Console.WriteLine("Producte a comprar: ");
                         string producteComprar = Console.ReadLine();
+                        if ((posValorBuscar(productesCistella, nelementsCistella, producteComprar) != -1))
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Producte ja comprat, modifica quantitat");
+                            nelementsCistella--;
+                        }
+                        Console.WriteLine();
                         Console.WriteLine("Quantitat: ");
                         string quantitatComprar = Console.ReadLine();
                         while (!quantitatComprar.All(char.IsDigit) || (int.Parse(quantitatComprar) < 0))
@@ -258,6 +265,7 @@ namespace Botiga
             Console.WriteLine(taulaProd);
             Console.WriteLine();
             Console.WriteLine(FormatMenu($"Total: {Math.Round(total,2)}€ "));
+            Console.WriteLine(FormatMenu($"Diners restants: {diners}€"));
         }
         static double calcularTotal(double[] quantitat, double[] preuscistella, int i, ref double diners)
         {
@@ -300,12 +308,15 @@ namespace Botiga
             if (diners > 0)
             {
                 int pos = posValorBuscar(productesBotiga, nElements, producteComprat);
+
+                
                 if (pos != -1)
                 {
                     productesCistella[pos] = producteComprat;
                     quantitatCistella[pos] = quantitat;
                     preusCistella[pos] = preus[pos];
                     nElementsCistella++;
+                    Console.WriteLine(FormatMenu($"{diners}€ restants"));
                 }
                 else
                 {
@@ -327,10 +338,13 @@ namespace Botiga
             "5. Ampliar capacitat de la botiga\n",
             "6. Quicksort\n",
             " \n",
-            "CISTELLA",
+            " CISTELLA",
             " \n",
             "7. Afegir productes a la cistella.\n",
             "8. Mostrar cistella i total\n",
+            " \n",          
+            "9. SORTIR",
+
             };               
             Console.WriteLine(new String('*', Console.WindowWidth));
             Console.WriteLine();                                                                            
