@@ -43,13 +43,14 @@ namespace Botiga
                             Console.Write(FormatMenu("Preu(00,00€): "));                          
                             string preuProd = (Console.ReadLine());
                             //while ((preuProd<0||preuProd>double.MaxValue) && ValidadorNum(preuProd){ }                          
-                            while (!preuProd.All(char.IsDigit) || (double.Parse(preuProd) < 0))
+                            while (!double.TryParse(preuProd, out double preu) || preu < 0)
                             {
                                 Console.WriteLine(FormatMenu("Preu Invalid. Torna a intentar: "));
                                 Console.Write(FormatMenu("Preu(00,00€): "));
-                                preuProd = (Console.ReadLine());
+                                preuProd = Console.ReadLine();
                             }
-                            double preuProdBo=Convert.ToDouble(preuProd);
+
+                            double preuProdBo =Convert.ToDouble(preuProd);
                             AfegirProducte(productes, preus, ref nElementsBotiga, producte, preuProdBo);
                             Console.WriteLine();
                             Console.Write(FormatMenu("Vols afegir mes productes s/n"));
@@ -157,13 +158,14 @@ namespace Botiga
                 Console.WriteLine();
                 Console.Write(FormatMenu("Nou preu: "));
                 string nouPreu = Console.ReadLine();
-                while (!nouPreu.All(char.IsDigit) || (double.Parse(nouPreu) < 0))
+                while (!double.TryParse(nouPreu, out double preuValid) || preuValid < 0)
                 {
                     Console.WriteLine(FormatMenu("Preu Invalid. Torna a intentar: "));
-                    Console.Write(FormatMenu("Nou preu: "));
-                    nouPreu = (Console.ReadLine());
+                    Console.Write(FormatMenu("Preu(00,00€): "));
+                    nouPreu = Console.ReadLine();
                 }
-                double nouPreuValid = int.Parse(nouPreu);
+
+                double nouPreuValid = double.Parse(nouPreu);
                 int pos = posValorBuscar(prod, nElements, producteBuscar);
                 preu[pos] = nouPreuValid;
             }
