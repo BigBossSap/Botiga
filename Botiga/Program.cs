@@ -42,7 +42,7 @@ namespace Botiga
                             Console.WriteLine();
                             Console.Write(FormatMenu("Preu(00,00€): "));                          
                             string preuProd = (Console.ReadLine());
-                            //while ((preuProd<0||preuProd>double.MaxValue) && ValidadorNum(preuProd){ }                          
+                                                    
                             while (!double.TryParse(preuProd, out double preu) || preu < 0)
                             {
                                 Console.WriteLine(FormatMenu("Preu Invalid. Torna a intentar: "));
